@@ -10,10 +10,6 @@ def search_trade_classification(query: str) -> str:
 
 @mcp.prompt()
 def get_decomposition_strategy(prompt_name: str) -> str:
-    """
-    Retrieves a strategic plan for auditing.
-    Available: 'decompose_regulatory_query'.
-    """
     path = f"prompts/{prompt_name}.md"
     if not os.path.exists(path):
         return f"Strategy '{prompt_name}' not found. Please use a valid prompt name."
@@ -22,5 +18,4 @@ def get_decomposition_strategy(prompt_name: str) -> str:
         return f.read()
 
 if __name__ == "__main__":
-    # Run the server
     mcp.run()

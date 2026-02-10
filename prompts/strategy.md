@@ -16,10 +16,6 @@ The user will provide a product name. You must:
 - Generate queries based on chemical properties and industrial applications. Do NOT suggest specific HS codes until a material match has been confirmed in the text.
 
 # Examples
-- User: "Wireless Headphones"
-- Bad Query: "Audio output devices functionality"
-- Good Query: "8518.30 Headphones and earphones bluetooth transmission"
-
-- User: "Solar IoT Sensor"
-- Bad Query: "Solar panel electronics"
-- Good Query: "8541.40 Photosensitive semiconductor devices vs 8504.40 Static converters"
+- User: "RGB Mouse"
+- Good query: "Computer mouse with decorative LED"
+- Bad query: "Computer device for controlling"

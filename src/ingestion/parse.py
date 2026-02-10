@@ -10,31 +10,24 @@ from llama_index.core import (
     Settings
 )
 from llama_index.core.node_parser import SentenceSplitter
-
-# --- New Drivers ---
 from llama_index.llms.google_genai import GoogleGenAI
 from llama_index.embeddings.google_genai import GoogleGenAIEmbedding
 
 load_dotenv()
-
-# --- Configure Settings ---
 RUN_MODE = os.getenv("RUN_MODE", "cloud")
 if RUN_MODE == "local":
-    # Use Ollama for LLM (llama-index native driver)
     from llama_index.llms.ollama import Ollama as LlamaOllama
     model_name = os.getenv("LOCAL_WORKER_MODEL")
     Settings.llm = LlamaOllama(model=model_name, base_url=os.getenv("OLLAMA_BASE_URL"))
-    # Use Ollama embedding
     from llama_index.embeddings.ollama import OllamaEmbedding
     Settings.embed_model = OllamaEmbedding(model_name=os.getenv("LOCAL_EMBEDED_MODEL"), base_url=os.getenv("OLLAMA_BASE_URL"))
 else:
     if os.getenv("GOOGLE_API_KEY"):
-        # Embedding Model 
         Settings.embed_model = GoogleGenAIEmbedding(
             model_name=os.getenv("CLOUD_EMBEDED_MODEL"),
             api_key=os.getenv("GOOGLE_API_KEY")
         )
-        # LLM 
+
         Settings.llm = GoogleGenAI(
             model=os.getenv("CLOUD_WORKER_MODEL"),
             api_key=os.getenv("GOOGLE_API_KEY")
@@ -46,7 +39,7 @@ def parse_document():
     return documents
 
 def get_or_create_index():
-    # 1. Check existing storage
+    # Check existing storage
     if os.path.exists("./storage"):
         print("Loading existing index from disk...")
         try:
@@ -57,7 +50,7 @@ def get_or_create_index():
             print(f"Index corrupted ({e}). Deleting and rebuilding...")
             shutil.rmtree("./storage")
 
-    # 2. Build New Index
+    # Build New Index
     print("Building new Knowledge Base (Gemini 2.5 Flash Lite)...")
     documents = parse_document()
     
@@ -74,22 +67,22 @@ def get_or_create_index():
         
         for attempt in range(3):
             try:
-                print(f"  > Processing batch {(i // BATCH_SIZE) + 1} ({len(batch)} items)...")
+                print(f"> Processing batch {(i // BATCH_SIZE) + 1} ({len(batch)} items)...")
                 index.insert_nodes(batch)
                 
                 if RUN_MODE != "local":
-                    print("    ⏳ Cooldown 240s to fully reset Token Quota...")
+                    print("Cooldown 240s to fully reset Token Quota...")
                     time.sleep(240) 
                 break 
             except Exception as e:
-                print(f"    ⚠️ Error: {e}")
+                print(f"Error: {e}")
                 if "429" in str(e) and RUN_MODE != "local":
-                    print("    🛑 Rate limit hit. Waiting 7 minutes...")
+                    print("Rate limit hit. Waiting 7 minutes...")
                     time.sleep(420)
                 else:
                     break
 
-    print("✅ Indexing Complete! Saving to disk...")
+    print("Indexing Complete! Saving to disk...")
     index.storage_context.persist(persist_dir="./storage")
     return index
 

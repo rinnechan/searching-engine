@@ -5,12 +5,11 @@ import uuid
 import sys
 import time
 from dotenv import load_dotenv
-
-# Imports from your project structure
 from src.graph.builder import graph
 from src.ingestion.parse import get_or_create_index
 
 def setup_logging():
+    # Configure logger
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
     
@@ -59,25 +58,17 @@ def main():
     logger.info(f"--- STARTING AUDIT: {args.thread} ---")
     
     try:
-        # EXECUTE THE GRAPH
         final_state = graph.invoke(initial_state, config=config)
         end_time = time.time()
-        
-        # --- PARETO FRONTIER CALCULATION ---
         latency = end_time - start_time
-        
-        # Pull metrics stored in state by the Auditor node
         faith_score = final_state.get("faithfulness_score", 0.0)
-        # Note: You need to implement token tracking in your nodes to get this real value
         total_tokens = final_state.get("total_tokens", 0) 
         
-        # Groq Pricing for Llama 3.3 70B (approx. $0.59 per 1M input / $0.79 per 1M output)
-        # We'll use your $0.0006/1k tokens as a blended estimate for the assessment
+        # Asumming using token cost from GROQ, can change based on your LLM pricing
         token_cost = (total_tokens / 1000) * 0.0006 
 
-        # OUTPUT BENCHMARK REPORT
         print(f"""
-🚀 ADATA ASSESSMENT BENCHMARK REPORT
+BENCHMARK REPORT
 ------------------------------------
 QUERY: {args.query}
 HS-CODE: {final_state.get('final_hscode', 'N/A')}
