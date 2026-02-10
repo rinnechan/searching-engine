@@ -4,3 +4,4 @@ __pycache__/
 storage/
 .env
 stcced2022.pdf
+audit.log
