@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 RUN_MODE = os.getenv("RUN_MODE", "cloud")
 
 def pacer_node(state: AuditorState):
-    # Encounter too many rate-limit so have to put it here. This is a safety node to prevent 413/429 errors during recursive loops.
+    # Encounter too many rate-limit so have to put it here. This is a safety node to prevent errors during recursive loops.
     if RUN_MODE != "local":
         logger.info("Pacing: Waiting 10 seconds to respect API rate limits...")
         time.sleep(10)
