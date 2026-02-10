@@ -10,24 +10,24 @@ from llama_index.core import (
     Settings
 )
 from llama_index.core.node_parser import SentenceSplitter
-from llama_index.llms.google_genai import GoogleGenAI
-from llama_index.embeddings.google_genai import GoogleGenAIEmbedding
+from llama_index.embeddings.ollama import OllamaEmbedding
 
 load_dotenv()
 RUN_MODE = os.getenv("RUN_MODE", "cloud")
+
+# Always use Ollama embeddings — the index was built with EMBEDED_MODEL (Ollama)
+Settings.embed_model = OllamaEmbedding(
+    model_name=os.getenv("EMBEDED_MODEL"),
+    base_url=os.getenv("OLLAMA_BASE_URL")
+)
+
 if RUN_MODE == "local":
     from llama_index.llms.ollama import Ollama as LlamaOllama
     model_name = os.getenv("LOCAL_WORKER_MODEL")
     Settings.llm = LlamaOllama(model=model_name, base_url=os.getenv("OLLAMA_BASE_URL"))
-    from llama_index.embeddings.ollama import OllamaEmbedding
-    Settings.embed_model = OllamaEmbedding(model_name=os.getenv("LOCAL_EMBEDED_MODEL"), base_url=os.getenv("OLLAMA_BASE_URL"))
 else:
+    from llama_index.llms.google_genai import GoogleGenAI
     if os.getenv("GOOGLE_API_KEY"):
-        Settings.embed_model = GoogleGenAIEmbedding(
-            model_name=os.getenv("CLOUD_EMBEDED_MODEL"),
-            api_key=os.getenv("GOOGLE_API_KEY")
-        )
-
         Settings.llm = GoogleGenAI(
             model=os.getenv("CLOUD_WORKER_MODEL"),
             api_key=os.getenv("GOOGLE_API_KEY")
