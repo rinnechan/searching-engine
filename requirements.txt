@@ -1,0 +1,24 @@
+# --- Core Components ---
+llama-index-core
+llama-index-llms-google-genai 
+llama-index-embeddings-google-genai
+google-generativeai
+
+# --- Data Loading ---
+llama-parse
+llama-index-readers-file
+pypdf
+
+# --- Local Ollama ---
+llama-index-llms-ollama
+llama-index-embeddings-ollama
+
+# --- Agent & Tools ---
+langgraph
+langchain-groq
+langchain-google-genai
+langchain-community
+langchain-ollama
+# fastmcp
+deepeval
+python-dotenv

@@ -1,0 +1,14 @@
+services:
+  auditor-agent:
+    build: .
+    env_file: .env
+    volumes:
+      - ./:/app:z
+    logging:
+      driver: "json-file"
+
+    environment:
+      - PYTHONPATH=/app  
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    network_mode: "host"
