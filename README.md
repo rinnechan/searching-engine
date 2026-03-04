@@ -1,6 +1,6 @@
 # Auditor Agent: Hybrid Searching Engine
 
-An agentic search and auditing system built with a dual-model architecture. The system utilizes a **Supervisor** to manage logic and a **Worker** to handle information retrieval and processing. It supports seamless switching between high-performance **Cloud** models and privacy-focused **Local** models.
+An agentic search and auditing system built with a dual-model architecture. The system utilizes a **Supervisor** to manage logic and a **Worker** to handle information retrieval and processing. It supports seamless switching between high-performance **Cloud** models and privacy-focused **Local** models. It is built to search trade compliance, it is powered by STCCED 2022 but you can use whatever dataset you have.
 
 ---
 
@@ -63,3 +63,5 @@ Future improvements:
 Evaluation Refinement: Adjust the DeepEval prompt to better recognize structured tariff codes to prevent unnecessary recursion loops.
 
 Local Model Scaling: Transition to 14B or 30B models for the Supervisor in local mode to increase reasoning capabilities to ~80% accuracy.
+
+Attribution: This project uses the Singapore Trade Classification, Customs and Excise Duties (STCCED) 2022 dataset, made available by Singapore Customs under the Singapore Open Data Licence.
